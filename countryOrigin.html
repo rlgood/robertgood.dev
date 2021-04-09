@@ -39,8 +39,9 @@
                             <p>
                                 This project was an assignment for my machine learning class. We investigated data from the World Value Survey Version 7,
                                 the survey includes participants from over 300 countries with over 250 questions ranging from religion to life satisfaction.
-                                Our project was to create a model to predict country of origin from responses of citizens from the USA and Mexico. We were tasked with creating the
-                                project in RStudio and KNIME.
+                                Our project was to use a random forest to determine variable importance and then create a logistic regression model to
+                                predict country of origin from responses of citizens from the USA and Mexico. We were tasked with creating the
+                                project in R and KNIME.
                             </p>
 
                             <hr class="major" />
@@ -49,7 +50,7 @@
                             <h2>Random Forest to Determine Variable Importance</h2>
 
                             <p>
-                                Our first step is to narrow down the variables.
+                                Our first step is to narrow down the variables so our data is not so cluttered.
                                 We want to use variables that are representative of beliefs, needs, values,
                                 and attitudes to determine if the respondent resides in Mexico or US.
                                 However, we need to be careful, as some variables are too specific.
@@ -62,9 +63,11 @@
                             <span class="image object"><img src="images/randomForest.jpg" alt="" /></span>
                             <br />
                             <p>
-                                <br />By limiting my search to variables with an importance greater than 9.5 the variable were more manageable.
-                                I spent some time referencing the survey and cultural atlases for Mexico and US to pick my final variable,
-                                highlighted in yellow below:
+                                <br />By limiting my search to variables with an importance greater than 9.5 the variables
+                                were much more manageable. I referenced the World Value Survey and cultural atlases for
+                                Mexico and US to better understand which variables would be representative of beliefs,
+                                needs, values, and attitudes to pick my final variables. The variables chosen for the
+                                logistic regression model are highlighted in yellow below:
                             </p>
                             <span class="image object"><img src="images/variableImportance.jpg" alt="" /></span>
 
@@ -75,8 +78,7 @@
 
                                 B_COUNTRY is a nominal variable that specifies the respondent country of origin code.
                                 The code for Mexico is ‘484’ and for USA is ‘840’. These two countries will be acting as my dependent variables.
-                                The following survey questions were used as my independent variables:
-
+                                <br /> The following survey questions were used as my independent variables:
                                 <br /> - Q7 references encouraging children to learn good manners at home as being especially important.
                                 <br /> - Q35 references the respondent’s agreement with the statement “if a woman earns more
                                 money than her husband, it’s almost certain to cause problems.”
@@ -87,7 +89,29 @@
                                 <br /> - Q213 references participating in political action and social activism by donating to a group or campaign.
                                 <br /> - Q255 references how close the respondent feels to their village, town, or city.
                             </p>
+                            <hr class="major" />
+                            <div class="major" />
+                            <h2>Variable Validation and Transformations</h2>
+                            <p>
+                                To ensure that the variables were not Country specific I needed to look at the data,
+                                some responses have Country code prefixes which would not be suitable for this model.
+                                After looking at the data I looked at a summary of the variables:
+                            </p>
 
+                            <span class="image object"><img src="images/variableSummary.jpg" alt="" /></span>
+                            <p>
+                                Verifying none of the variables were too Country specific I needed to deal with NA's.
+                                I decided to use mode imputation on the independent variables. Additionally I cast B_COUNTRY as a factor
+                                and renamed B_COUNTRY to COUNTRY for ease of use. Finally I recoded Mexico to equal 0 and US to equal 1.
+                                <br />Now we can see there is no missingness:
+                            </p>
+                            <span class="image object"><img src="images/variableSummaryV2.jpg" alt="" /></span>
+                            <hr class="major" />
+                            <div class="major" />
+                            <h2>Plotting Variables</h2>
+                            <p>
+                                Afterwards I plotted the variables by country to compare the distributions:
+                            </p>
                             <div class="posts">
                                 <article>
                                     <span class="image"><img src="images/histQ7Mexico.jpg" alt="" /></span>
@@ -106,7 +130,7 @@
                                 <article>
                                     <span class="image"><img src="images/histQ35Mexico.jpg" alt="" /></span>
                                     <p>
-                                        The distribution of responsed in Mexico for Q35(high earning wife) where 1 is "Agree strongly" and 5 is
+                                        The distribution of responses in Mexico for Q35(high earning wife) where 1 is "Agree strongly" and 5 is
                                         "Disagree strongly"
                                         <br />With strong traditional gender roles in Mexican families this distribution makes sense.
                                     </p>
@@ -114,7 +138,7 @@
                                 <article>
                                     <span class="image"><img src="images/histQ35USA.jpg" alt="" /></span>
                                     <p>
-                                        The distribution of responsed in USA for Q35(high earning wife) where 1 is "Agree strongly" and 5 is
+                                        The distribution of responses in USA for Q35(high earning wife) where 1 is "Agree strongly" and 5 is
                                         "Disagree strongly"
                                         <br />With weaker traditional gender roles in US families this distribution makes sense. Its interesting
                                         that none of the respondents agreed or disagreed strongly.
@@ -123,7 +147,7 @@
                                 <article>
                                     <span class="image"><img src="images/histQ116Mexico.jpg" alt="" /></span>
                                     <p>
-                                        The distribution of responsed in Mexico for Q116(civil service providers are corrupt) where 1 is
+                                        The distribution of responses in Mexico for Q116(civil service providers are corrupt) where 1 is
                                         "None of them" and 4 is "All of them"
                                         <br />With the distrust in government overall in Mexico this distribution makes sense.
                                     </p>
@@ -131,7 +155,7 @@
                                 <article>
                                     <span class="image"><img src="images/histQ116USA.jpg" alt="" /></span>
                                     <p>
-                                        The distribution of responsed in USA for Q116(civil service providers are corrupt) where 1 is
+                                        The distribution of responses in USA for Q116(civil service providers are corrupt) where 1 is
                                         "None of them" and 4 is "All of them"
                                         <br />With US citizens having high trust in goverment overall this distribution makes sense.
                                     </p>
@@ -139,60 +163,65 @@
                                 <article>
                                     <span class="image"><img src="images/histQ143Mexico.jpg" alt="" /></span>
                                     <p>
-                                        The distribution of responsed in Mexico for Q143(worry about children's education) where 1 is "Very much" and
+                                        The distribution of responses in Mexico for Q143(worry about children's education) where 1 is "Very much" and
                                         4 is "Not at all"
                                     </p>
                                 </article>
                                 <article>
                                     <span class="image"><img src="images/histQ143USA.jpg" alt="" /></span>
                                     <p>
-                                        The distribution of responsed in USA for Q143(worry about children's education) where 1 is "Very much" and
+                                        The distribution of responses in USA for Q143(worry about children's education) where 1 is "Very much" and
                                         4 is "Not at all"
                                     </p>
                                 </article>
                                 <article>
                                     <span class="image"><img src="images/histQ164Mexico.jpg" alt="" /></span>
                                     <p>
-                                        The distribution of responsed in Mexico for Q164(importance of god) where 1 is "Not at all important" and 10 is "Very important"
+                                        The distribution of responses in Mexico for Q164(importance of god) where 1 is "Not at all important" and 10 is "Very important"
                                     </p>
                                 </article>
                                 <article>
                                     <span class="image"><img src="images/histQ164USA.jpg" alt="" /></span>
                                     <p>
-                                        The distribution of responsed in USA for Q164(importance of god) where 1 is "Not at all important" and 10 is "Very important"
+                                        The distribution of responses in USA for Q164(importance of god) where 1 is "Not at all important" and 10 is "Very important"
                                     </p>
                                 </article>
                                 <article>
                                     <span class="image"><img src="images/histQ213Mexico.jpg" alt="" /></span>
                                     <p>
-                                        The distribution of responsed in Mexico for Q213(action/activism through donating) where 1 is "Have done", 2 is "Might do",
+                                        The distribution of responses in Mexico for Q213(action/activism through donating) where 1 is "Have done", 2 is "Might do",
                                         and 3 is "Would never do"
                                     </p>
                                 </article>
                                 <article>
                                     <span class="image"><img src="images/histQ213USA.jpg" alt="" /></span>
                                     <p>
-                                        The distribution of responsed in USA for Q213(action/activism through donating) where 1 is "Have done", 2 is "Might do",
+                                        The distribution of responses in USA for Q213(action/activism through donating) where 1 is "Have done", 2 is "Might do",
                                         and 3 is "Would never do"
                                     </p>
                                 </article>
                                 <article>
                                     <span class="image"><img src="images/histQ255Mexico.jpg" alt="" /></span>
                                     <p>
-                                        The distribution of responsed in Mexico for Q255(closeness to village/town/city) where 1 is "Very close" and 4 is "Not close at all"
+                                        The distribution of responses in Mexico for Q255(closeness to village/town/city) where 1 is "Very close" and 4 is "Not close at all"
                                     </p>
                                 </article>
                                 <article>
                                     <span class="image"><img src="images/histQ255USA.jpg" alt="" /></span>
                                     <p>
-                                        The distribution of responsed in USA for Q255(closeness to village/town/city) where 1 is "Very close" and 4 is "Not close at all"
+                                        The distribution of responses in USA for Q255(closeness to village/town/city) where 1 is "Very close" and 4 is "Not close at all"
                                     </p>
                                 </article>
                             </div>
-
+                            <hr class="major" />
+                            <div class="major" />
+                            <h2>Plotting Variables</h2>
+                            <p>
+                                Afterwards I plotted the variables by country to compare the distributions:
+                            </p>
 
                             <p>
-                                
+
                             </p>
 </div>
                         </section>
@@ -240,7 +269,7 @@
 								<div class="mini-posts">
 									<article>
 										<a href="countryOrigin.html" class="image"><img src="images/pic07.jpg" alt="" /></a>
-										<p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore aliquam.</p>
+                                        <p>Determining Country of Origin in R and KNIME</p>
 									</article>
 									<article>
 										<a href="#" class="image"><img src="images/pic08.jpg" alt="" /></a>
@@ -276,7 +305,7 @@
 							<footer id="footer">
 								<p class="copyright">
 									&copy; Robert Good. All rights reserved.</a>
-									<br />Design: <a href="https://html5up.net">HTML5 UP</a>.
+									<br />Design: <a href="https://html5up.net">HTML5 UP.</a>
 								</p>
 							</footer><a href="https://html5up.net">HTML5 UP</a>.</p>
 							</footer>
