@@ -41,7 +41,7 @@
                                 the survey includes participants from over 300 countries with over 250 questions ranging from religion to life satisfaction.
                                 Our project was to use a random forest to determine variable importance and then create a logistic regression model to
                                 predict country of origin from responses of citizens from the USA and Mexico. We were tasked with creating the
-                                project in R and KNIME.
+                                project in R and KNIME. Our file was provided in spss format.
                             </p>
 
                             <hr class="major" />
@@ -215,14 +215,59 @@
                             </div>
                             <hr class="major" />
                             <div class="major" />
-                            <h2>Plotting Variables</h2>
+                            <h2>Logistic Regression Model</h2>
                             <p>
-                                Afterwards I plotted the variables by country to compare the distributions:
+                                The summary below allows us to make an initial check of the model.
+                                The first column we look at is the z value.
+                                The further from 0 a value is, the stronger the variable is as a predictor.
+                                In this case, we can see Q143(worry about children’s education) is the strongest predictor.
+                                We also see that Q255(closeness to village/town/city) is our weakest predictor.
+                                Looking at the p-value for all variables we see none are greater than 0.05 i.e. they are statistically significant.
                             </p>
-
+                            <span class="image object"><img src="images/logModel.jpg" alt="" /></span>
+                            <hr class="major" />
+                            <div class="major" />
+                            <h2>Accuracy of Model</h2>
                             <p>
-
+                                Finally we want to evaulate the accuracy of the model.
+                                For this we look at the accuracy of the model compared to the naive model.
+                                Additionally, we look at recall, false positive rate, false negative rate and the f1 score.
+                                We can see that this model far outperforms the naive model with an accuracy of 93% compared to 40%
                             </p>
+                            <span class="image object"><img src="images/accuracy.jpg" alt="" /></span>
+                            <hr class="major" />
+                            <div class="major" />
+                            <h2>Repeat in KNIME</h2>
+                            <p>
+                                To demonstrate understanding of the concepts and adaptability, we were tasked with also creating the model in KNIME.
+                                Because I am more comfortable in R and due to time constraints I did not recreate the random forest in KNIME to
+                                determine variable importance, instead I just used the variables selected in R.
+                            </p>
+                            <p>
+                                In KNIME I used the R Source node to load the spss file.
+                                Then I narrow the dataset down to Mexico and US respondents with a row filter.
+                                Then I saved the file as a CSV to ease of use in the KNIME model.
+                            </p>
+                            <span class="image object"><img src="images/knimeCountryOrigin.jpg" alt="" /></span>
+                            <p>
+                                Using the scorer node we see that our model is producing a similar accuracy:
+                            </p>
+                            <span class="image object"><img src="images/knimeAccuracy.jpg" alt="" /></span>
+                            <hr class="major" />
+                            <div class="major" />
+                            <h2>ROC Curves</h2>
+                            <p>
+                                Due to deadline constraints and ease of use I only created the ROC curves in KNIME.
+                                In the future I would like to add the code to plot the ROC curves in R.
+                            </p>
+                            <p>
+                                ROC Curve for Mexico:
+                            </p>
+                            <span class="image object"><img src="images/rocMex.jpg" alt="" /></span>
+                            <p>
+                                ROC Curve for USA:
+                            </p>
+                            <span class="image object"><img src="images/rocUS.jpg" alt="" /></span>
 </div>
                         </section>
 
@@ -307,7 +352,6 @@
 									&copy; Robert Good. All rights reserved.</a>
 									<br />Design: <a href="https://html5up.net">HTML5 UP.</a>
 								</p>
-							</footer><a href="https://html5up.net">HTML5 UP</a>.</p>
 							</footer>
 
 						</div>
