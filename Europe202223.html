@@ -1,0 +1,366 @@
+﻿<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Robert L. Good</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+				<div id="main">
+					<div class="inner">
+
+						<!-- Header -->
+						<header id="header">
+							<a href="index.html" class="logo"><strong>Home</strong></a>
+							<ul class="icons">
+								<li><a href="https://github.com/rlgood" class="icon brands fa fa-github"><span class="label">GitHub</span></a></li>
+								<li><a href="https://www.linkedin.com/in/robertlouisgood/" class="icon brands fa fa-linkedin"><span class="label">LinkedIn</span></a></li>
+							</ul>
+
+						</header>
+
+						<!-- Content -->
+                        <section>
+                            <header class="main">
+                                <h1>Predicting Country of Origin</h1>
+                            </header>
+
+                            <p>
+                                This project was an assignment for my machine learning class. We investigated data from the World Value Survey Version 7,
+                                the survey includes participants from over 300 countries with over 250 questions ranging from religion to life satisfaction.
+                                Our project was to use a random forest to determine variable importance and then create a logistic regression model to
+                                predict country of origin from responses of citizens from the USA and Mexico. We were tasked with creating the
+                                project in R and KNIME. Our file was provided in spss format.
+                            </p>
+
+                            <hr class="major" />
+                            <div class="major" />
+
+                            <h2>Random Forest to Determine Variable Importance</h2>
+
+                            <p>
+                                Our first step is to narrow down the variables so our data is not so cluttered.
+                                We want to use variables that are representative of beliefs, needs, values,
+                                and attitudes to determine if the respondent resides in Mexico or US.
+                                However, we need to be careful, as some variables are too specific.
+
+                                i.e. Q223 asks the respondent to list country-specific political parties.
+                                <div></div>
+                                To narrow the variables down to a manageable level I used the randomForest
+                                package in R to run 2,000 decision trees ranking variable importance in a descending order.
+                            </p>
+                            <span class="image object"><img src="images/randomForest.jpg" alt="" /></span>
+                            <br />
+                            <p>
+                                <br />By limiting my search to variables with an importance greater than 9.5 the variables
+                                were much more manageable. I referenced the World Value Survey and cultural atlases for
+                                Mexico and US to better understand which variables would be representative of beliefs,
+                                needs, values, and attitudes to pick my final variables. The variables chosen for the
+                                logistic regression model are highlighted in yellow below:
+                            </p>
+                            <span class="image object"><img src="images/variableImportance.jpg" alt="" /></span>
+
+                            <hr class="major" />
+                            <div class="major" />
+                            <h2>Dependent and Independent Variables</h2>
+                            <p>
+
+                                B_COUNTRY is a nominal variable that specifies the respondent country of origin code.
+                                The code for Mexico is ‘484’ and for USA is ‘840’. These two countries will be acting as my dependent variables.
+                                <br /> The following survey questions were used as my independent variables:
+                                <br /> - Q7 references encouraging children to learn good manners at home as being especially important.
+                                <br /> - Q35 references the respondent’s agreement with the statement “if a woman earns more
+                                money than her husband, it’s almost certain to cause problems.”
+                                <br /> - Q116 references belief that civil service providers (police, judiciary, civil servants, doctors,
+                                teachers) are involved in corruption.
+                                <br /> - Q143 references the degree of worry the respondent has in not being able to give their children a good education.
+                                <br /> - Q164 references the importance of God in the respondent’s life.
+                                <br /> - Q213 references participating in political action and social activism by donating to a group or campaign.
+                                <br /> - Q255 references how close the respondent feels to their village, town, or city.
+                            </p>
+                            <hr class="major" />
+                            <div class="major" />
+                            <h2>Variable Validation and Transformations</h2>
+                            <p>
+                                To ensure that the variables were not Country specific I needed to look at the data,
+                                some responses have Country code prefixes which would not be suitable for this model.
+                                After looking at the data I looked at a summary of the variables:
+                            </p>
+
+                            <span class="image object"><img src="images/variableSummary.jpg" alt="" /></span>
+                            <p>
+                                Verifying none of the variables were too Country specific I needed to deal with NA's.
+                                I decided to use mode imputation on the independent variables. Additionally I cast B_COUNTRY as a factor
+                                and renamed B_COUNTRY to COUNTRY for ease of use. Finally I recoded Mexico to equal 0 and US to equal 1.
+                                <br />Now we can see there is no missingness:
+                            </p>
+                            <span class="image object"><img src="images/variableSummaryV2.jpg" alt="" /></span>
+                            <hr class="major" />
+                            <div class="major" />
+                            <h2>Plotting Variables</h2>
+                            <p>
+                                Afterwards I plotted the variables by country to compare the distributions:
+                            </p>
+                            <div class="posts">
+                                <article>
+                                    <span class="image"><img src="images/histQ7Mexico.jpg" alt="" /></span>
+                                    <p>
+                                        The distribution of responses in Mexico for Q7(child manners) where 1 is "Mentioned" and 2 is "Not mentioned"
+                                        <br />With the importance of family and being a good host in Mexican culture this distribution makes sense.
+                                    </p>
+                                </article>
+                                <article>
+                                    <span class="image"><img src="images/histQ7USA.jpg" alt="" /></span>
+                                    <p>
+                                        The distribution of responses in USA for Q7(child manners) where 1 is "Mentioned" and 2 is "Not mentioned"
+                                    </p>
+                                </article>
+
+                                <article>
+                                    <span class="image"><img src="images/histQ35Mexico.jpg" alt="" /></span>
+                                    <p>
+                                        The distribution of responses in Mexico for Q35(high earning wife) where 1 is "Agree strongly" and 5 is
+                                        "Disagree strongly"
+                                        <br />With strong traditional gender roles in Mexican families this distribution makes sense.
+                                    </p>
+                                </article>
+                                <article>
+                                    <span class="image"><img src="images/histQ35USA.jpg" alt="" /></span>
+                                    <p>
+                                        The distribution of responses in USA for Q35(high earning wife) where 1 is "Agree strongly" and 5 is
+                                        "Disagree strongly"
+                                        <br />With weaker traditional gender roles in US families this distribution makes sense. Its interesting
+                                        that none of the respondents agreed or disagreed strongly.
+                                    </p>
+                                </article>
+                                <article>
+                                    <span class="image"><img src="images/histQ116Mexico.jpg" alt="" /></span>
+                                    <p>
+                                        The distribution of responses in Mexico for Q116(civil service providers are corrupt) where 1 is
+                                        "None of them" and 4 is "All of them"
+                                        <br />With the distrust in government overall in Mexico this distribution makes sense.
+                                    </p>
+                                </article>
+                                <article>
+                                    <span class="image"><img src="images/histQ116USA.jpg" alt="" /></span>
+                                    <p>
+                                        The distribution of responses in USA for Q116(civil service providers are corrupt) where 1 is
+                                        "None of them" and 4 is "All of them"
+                                        <br />With US citizens having high trust in goverment overall this distribution makes sense.
+                                    </p>
+                                </article>
+                                <article>
+                                    <span class="image"><img src="images/histQ143Mexico.jpg" alt="" /></span>
+                                    <p>
+                                        The distribution of responses in Mexico for Q143(worry about children's education) where 1 is "Very much" and
+                                        4 is "Not at all"
+                                    </p>
+                                </article>
+                                <article>
+                                    <span class="image"><img src="images/histQ143USA.jpg" alt="" /></span>
+                                    <p>
+                                        The distribution of responses in USA for Q143(worry about children's education) where 1 is "Very much" and
+                                        4 is "Not at all"
+                                    </p>
+                                </article>
+                                <article>
+                                    <span class="image"><img src="images/histQ164Mexico.jpg" alt="" /></span>
+                                    <p>
+                                        The distribution of responses in Mexico for Q164(importance of god) where 1 is "Not at all important" and 10 is "Very important"
+                                    </p>
+                                </article>
+                                <article>
+                                    <span class="image"><img src="images/histQ164USA.jpg" alt="" /></span>
+                                    <p>
+                                        The distribution of responses in USA for Q164(importance of god) where 1 is "Not at all important" and 10 is "Very important"
+                                    </p>
+                                </article>
+                                <article>
+                                    <span class="image"><img src="images/histQ213Mexico.jpg" alt="" /></span>
+                                    <p>
+                                        The distribution of responses in Mexico for Q213(action/activism through donating) where 1 is "Have done", 2 is "Might do",
+                                        and 3 is "Would never do"
+                                    </p>
+                                </article>
+                                <article>
+                                    <span class="image"><img src="images/histQ213USA.jpg" alt="" /></span>
+                                    <p>
+                                        The distribution of responses in USA for Q213(action/activism through donating) where 1 is "Have done", 2 is "Might do",
+                                        and 3 is "Would never do"
+                                    </p>
+                                </article>
+                                <article>
+                                    <span class="image"><img src="images/histQ255Mexico.jpg" alt="" /></span>
+                                    <p>
+                                        The distribution of responses in Mexico for Q255(closeness to village/town/city) where 1 is "Very close" and 4 is "Not close at all"
+                                    </p>
+                                </article>
+                                <article>
+                                    <span class="image"><img src="images/histQ255USA.jpg" alt="" /></span>
+                                    <p>
+                                        The distribution of responses in USA for Q255(closeness to village/town/city) where 1 is "Very close" and 4 is "Not close at all"
+                                    </p>
+                                </article>
+                            </div>
+                            <hr class="major" />
+                            <div class="major" />
+                            <h2>Logistic Regression Model</h2>
+                            <p>
+                                The summary below allows us to make an initial check of the model.
+                                The first column we look at is the z value.
+                                The further from 0 a value is, the stronger the variable is as a predictor.
+                                In this case, we can see Q143(worry about children’s education) is the strongest predictor.
+                                We also see that Q255(closeness to village/town/city) is our weakest predictor.
+                                Looking at the p-value for all variables we see none are greater than 0.05 i.e. they are statistically significant.
+                            </p>
+                            <span class="image object"><img src="images/logModel.jpg" alt="" /></span>
+                            <hr class="major" />
+                            <div class="major" />
+                            <h2>Accuracy of Model</h2>
+                            <p>
+                                Finally we want to evaulate the accuracy of the model.
+                                For this we look at the accuracy of the model compared to the naive model.
+                                Additionally, we look at recall, false positive rate, false negative rate and the f1 score.
+                                We can see that this model far outperforms the naive model with an accuracy of 93% compared to 40%
+                            </p>
+                            <span class="image object"><img src="images/accuracy.jpg" alt="" /></span>
+                            <hr class="major" />
+                            <div class="major" />
+                            <h2>Repeat in KNIME</h2>
+                            <p>
+                                To demonstrate understanding of the concepts and adaptability, we were tasked with also creating the model in KNIME.
+                                Because I am more comfortable in R and due to time constraints I did not recreate the random forest in KNIME to
+                                determine variable importance, instead I just used the variables selected in R.
+                            </p>
+                            <p>
+                                In KNIME I used the R Source node to load the spss file.
+                                Then I narrow the dataset down to Mexico and US respondents with a row filter.
+                                Then I saved the file as a CSV to ease of use in the KNIME model.
+                            </p>
+                            <span class="image object"><img src="images/knimeCountryOrigin.jpg" alt="" /></span>
+                            <p>
+                                Using the scorer node we see that our model is producing a similar accuracy:
+                            </p>
+                            <span class="image object"><img src="images/knimeAccuracy.jpg" alt="" /></span>
+                            <hr class="major" />
+                            <div class="major" />
+                            <h2>ROC Curves</h2>
+                            <p>
+                                Due to deadline constraints and ease of use I only created the ROC curves in KNIME.
+                                In the future I would like to add the code to plot the ROC curves in R.
+                            </p>
+                            <p>
+                                ROC Curve for Mexico:
+                            </p>
+                            <span class="image object"><img src="images/rocMex.jpg" alt="" /></span>
+                            <p>
+                                ROC Curve for USA:
+                            </p>
+                            <span class="image object"><img src="images/rocUS.jpg" alt="" /></span>
+</div>
+                        </section>
+
+						</div>
+					</div>
+
+				<!-- Sidebar -->
+					<div id="sidebar">
+						<div class="inner">
+
+							<!-- Search -->
+							<section id="search" class="alt">
+								<form method="post" action="#">
+									<input type="text" name="query" id="query" placeholder="Search" />
+								</form>
+							</section>
+
+							<!-- Menu -->
+							<nav id="menu">
+								<header class="major">
+									<h2>Menu</h2>
+								</header>
+								<ul>
+									<li><a href="index.html">Home</a></li>
+									<li><a href="experience.html">Work Experience</a></li>
+									<li><a href="education.html">Education</a></li>
+									<li>
+										<span class="opener">Projects</span>
+										<ul>
+											<li><a href="countryOrigin.html">Predicting Country of Origin</a></li>
+											<li><a href="#">Project 2</a></li>
+											<li><a href="#">Project 3</a></li>
+										</ul>
+									</li>
+									<li><a href="#">About Robert</a></li>
+								</ul>
+							</nav>
+
+							<!-- Section -->
+							<section>
+								<header class="major">
+									<h2>Projects</h2>
+								</header>
+								<div class="mini-posts">
+									<article>
+										<a href="countryOrigin.html" class="image"><img src="images/pic07.jpg" alt="" /></a>
+                                        <p>Determining Country of Origin in R and KNIME</p>
+									</article>
+									<article>
+										<a href="#" class="image"><img src="images/underConstruction.jpg" alt="" /></a>
+										<p>UNDERCONSTRUCTION - STAY TUNED</p>
+									</article>
+								</div>
+								<ul class="actions">
+									<li><a href="#" class="button">More</a></li>
+								</ul>
+							</section>
+
+							<!-- Section -->
+							<section>
+								<header class="major">
+									<h2>Get in touch</h2>
+								</header>
+								<p>If you'd like to get in touch to discuss a career opportunity please contact me at:</p>
+								<ul class="contact">
+									<li class="icon solid fa-envelope"><a href="mailto:rgood285@gmail.com">rgood285@gmail.com</a></li>
+									<li class="icon solid fa-phone"><a href="tel:7153151756">(715) 315-1756</a></li>
+									<li class="icon solid fa-home">
+										PO Box 333<br />
+										Amherst, WI 54406
+									</li>
+								</ul>
+							</section>
+
+							<!-- Footer -->
+							<footer id="footer">
+								<p class="copyright">
+									&copy; Robert Good. All rights reserved.</a>
+									<br />Design: <a href="https://html5up.net">HTML5 UP.</a>
+								</p>
+							</footer>
+
+						</div>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
